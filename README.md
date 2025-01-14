@@ -1,1 +1,0 @@
-# 30day-Devops-Challenge
