@@ -90,3 +90,4 @@ def lambda_handler(event, context):
         return {"statusCode": 500, "body": "Error publishing to SNS"}
     
     return {"statusCode": 200, "body": "Data processed and sent to SNS"}
+    
