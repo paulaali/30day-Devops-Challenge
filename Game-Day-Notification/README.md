@@ -18,7 +18,7 @@ This project is an alert system that sends real-time NBA game day score notifica
 ---
 
 ## **Technical Architecture**
-img src= "game day arch-diagram.png"
+![Diagram](gamedayarch-diagram.png)
 
 
 ---
