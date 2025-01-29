@@ -10,8 +10,8 @@ load_dotenv()
 
 # AWS configurations
 region = "us-east-1"  # Replace with your preferred AWS region
-bucket_name = "sports-analytics-data-lake"  # Change to a unique S3 bucket name
-glue_database_name = "glue_nba_data_lake"
+bucket_name = "sports-analytics-data-lake-m"  # Change to a unique S3 bucket name
+glue_database_name = "glue_nba_data_lake_m"
 athena_output_location = f"s3://{bucket_name}/athena-results/"
 
 # Sportsdata.io configurations (loaded from .env)
@@ -96,17 +96,60 @@ def create_glue_table():
                 "StorageDescriptor": {
                     "Columns": [
                         {"Name": "PlayerID", "Type": "int"},
+                        {"Name": "SportsDataID", "Type": "string"},
+                        {"Name": "Status", "Type": "string"},
+                        {"Name": "TeamID", "Type": "int"},
+                        {"Name": "Team", "Type": "string"},
+                        {"Name": "Jersey", "Type": "int"},
+                        {"Name": "PositionCategory", "Type": "string"},
+                        {"Name": "Position", "Type": "string"},
                         {"Name": "FirstName", "Type": "string"},
                         {"Name": "LastName", "Type": "string"},
-                        {"Name": "Team", "Type": "string"},
-                        {"Name": "Position", "Type": "string"},
-                        {"Name": "Points", "Type": "int"}
+                        {"Name": "Height", "Type": "int"},
+                        {"Name": "Weight", "Type": "int"},
+                        {"Name": "BirthDate", "Type": "string"},
+                        {"Name": "BirthCity", "Type": "string"},
+                        {"Name": "BirthState", "Type": "string"},
+                        {"Name": "BirthCountry", "Type": "string"},
+                        {"Name": "HighSchool", "Type": "string"},
+                        {"Name": "College", "Type": "string"},
+                        {"Name": "Salary", "Type": "float"},
+                        {"Name": "PhotoUrl", "Type": "string"},
+                        {"Name": "Experience", "Type": "int"},
+                        {"Name": "SportRadarPlayerID", "Type": "string"},
+                        {"Name": "RotoworldPlayerID", "Type": "int"},
+                        {"Name": "RotoWirePlayerID", "Type": "int"},
+                        {"Name": "FantasyAlarmPlayerID", "Type": "int"},
+                        {"Name": "StatsPlayerID", "Type": "int"},
+                        {"Name": "SportsDirectPlayerID", "Type": "int"},
+                        {"Name": "XmlTeamPlayerID", "Type": "int"},
+                        {"Name": "InjuryStatus", "Type": "string"},
+                        {"Name": "InjuryBodyPart", "Type": "string"},
+                        {"Name": "InjuryStartDate", "Type": "string"},
+                        {"Name": "InjuryNotes", "Type": "string"},
+                        {"Name": "FanDuelPlayerID", "Type": "int"},
+                        {"Name": "DraftKingsPlayerID", "Type": "int"},
+                        {"Name": "YahooPlayerID", "Type": "int"},
+                        {"Name": "FanDuelName", "Type": "string"},
+                        {"Name": "DraftKingsName", "Type": "string"},
+                        {"Name": "YahooName", "Type": "string"},
+                        {"Name": "DepthChartPosition", "Type": "string"},
+                        {"Name": "DepthChartOrder", "Type": "int"},
+                        {"Name": "GlobalTeamID", "Type": "int"},
+                        {"Name": "FantasyDraftName", "Type": "string"},
+                        {"Name": "FantasyDraftPlayerID", "Type": "int"},
+                        {"Name": "UsaTodayPlayerID", "Type": "int"},
+                        {"Name": "UsaTodayHeadshotUrl", "Type": "string"},
+                        {"Name": "UsaTodayHeadshotNoBackgroundUrl", "Type": "string"},
+                        {"Name": "UsaTodayHeadshotUpdated", "Type": "string"},
+                        {"Name": "UsaTodayHeadshotNoBackgroundUpdated", "Type": "string"},
+                        {"Name": "NbaDotComPlayerID", "Type": "int"}
                     ],
                     "Location": f"s3://{bucket_name}/raw-data/",
-                    "InputFormat": "org.apache.hadoop.mapred.TextInputFormat",
+                    "InputFormat": "org.apache.hadoop.mapred.TextInputFormat",  # Line-delimited JSON
                     "OutputFormat": "org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat",
                     "SerdeInfo": {
-                        "SerializationLibrary": "org.openx.data.jsonserde.JsonSerDe"
+                        "SerializationLibrary": "org.openx.data.jsonserde.JsonSerDe"  # JSON SerDe for line-delimited JSON
                     },
                 },
                 "TableType": "EXTERNAL_TABLE",
