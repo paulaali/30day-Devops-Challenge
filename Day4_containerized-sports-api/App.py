@@ -1,12 +1,15 @@
 from flask import Flask, jsonify
 import requests
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = Flask(__name__)
 
 # SerpAPI base URL and API key
 SERP_API_URL = "https://serpapi.com/search.json"
-SERP_API_KEY = os.getenv("SPORTS_API_KEY")
+SERP_API_KEY = os.getenv("SERP_API_KEY")
 
 @app.route('/sports', methods=['GET'])
 def get_nfl_schedule():
@@ -23,30 +26,29 @@ def get_nfl_schedule():
         data = response.json()
 
         # Extract games from sports_results
-        games = data.get("sports_results", {}).get("games", [])
-        if not games:
+        game_spotlight = data.get("sports_results", {}).get("game_spotlight", [])
+        if not game_spotlight:
             return jsonify({"message": "No NFL schedule available.", "games": []}), 200
 
-        # Format the schedule into JSON
         formatted_games = []
-        for game in games:
-            teams = game.get("teams", [])
-            if len(teams) == 2:
-                away_team = teams[0].get("name", "Unknown")
-                home_team = teams[1].get("name", "Unknown")
-            else:
-                away_team, home_team = "Unknown", "Unknown"
+        teams = game_spotlight.get("teams", [])
 
-            game_info = {
-                "away_team": away_team,
-                "home_team": home_team,
-                "venue": game.get("venue", "Unknown"),
-                "date": game.get("date", "Unknown"),
-                "time": f"{game.get('time', 'Unknown')} ET" if game.get("time", "Unknown") != "Unknown" else "Unknown"
-            }
-            formatted_games.append(game_info)
+        if len(teams) == 2:
+            away_team = teams[0].get("name", "Unknown")
+            home_team = teams[1].get("name", "Unknown")
+        else:
+            away_team, home_team = "Unknown", "Unknown"
 
-        return jsonify({"message": "NFL schedule fetched successfully.", "games": formatted_games}), 200
+        game_info = {
+            "away_team": away_team,
+            "home_team": home_team,
+            "venue": game_spotlight.get("venue", "Unknown"),
+            "date": game_spotlight.get("date", "Unknown"),
+            "time": f"{game_spotlight.get('time', 'Unknown')} ET" if game_spotlight.get("time", "Unknown") != "Unknown" else "Unknown"
+        }
+
+
+        return jsonify({"message": "NFL schedule fetched successfully.", "games": game_info}), 200
     
     except Exception as e:
         return jsonify({"message": "An error occurred.", "error": str(e)}), 500
